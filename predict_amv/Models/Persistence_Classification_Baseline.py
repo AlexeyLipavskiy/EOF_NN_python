@@ -66,12 +66,12 @@ def make_classes(y,thresholds,exact_value=False,reverse=False):
     if exact_value is False: # Scale thresholds by standard deviation
         y_std = np.std(y) # Get standard deviation
         thresholds = np.array(thresholds) * y_std
-    y_class = np.zeros((y.shape[0],1))
+    y_class = np.zeros((y.shape[0], 1))
     
-    if nthres == 1: # For single threshold cases
+    if nthres == 1:  # For single threshold cases
         thres = thresholds[0]
-        y_class[y<=thres] = 0
-        y_class[y>thres] = 1
+        y_class[y <= thres] = 0
+        y_class[y > thres] = 1
         
         print("Class 0 Threshold is y <= %.2f " % (thres))
         print("Class 0 Threshold is y > %.2f " % (thres))
@@ -83,7 +83,7 @@ def make_classes(y,thresholds,exact_value=False,reverse=False):
         else:
             thres = thresholds[-1]
         
-        if reverse: # Assign class 0 to largest values
+        if reverse:  # Assign class 0 to largest values
             tassign = nthres-t
         else:
             tassign = t
@@ -96,17 +96,18 @@ def make_classes(y,thresholds,exact_value=False,reverse=False):
             print("Class %i Threshold is y > %.2f " % (tassign,thres))
         else: # Intermediate values
             thres0 = thresholds[t-1]
-            y_class[(y>thres0) * (y<=thres)] = tassign
-            print("Class %i Threshold is %.2f < y <= %.2f " % (tassign,thres0,thres))
+            y_class[(y > thres0) * (y <= thres)] = tassign
+            print("Class %i Threshold is %.2f < y <= %.2f " % (tassign, thres0, thres))
     return y_class
 
-def select_samples(nsamples,y_class,X):
+
+def select_samples(nsamples, y_class, X):
     """
     Sample even amounts from each class
 
     Parameters
     ----------
-    nsample : INT
+    nsamples : INT
         Number of samples to get from each class
     y_class : ARRAY [samples x 1]
         Labels for each sample
@@ -125,9 +126,9 @@ def select_samples(nsamples,y_class,X):
     
     """
     
-    allsamples,nchannels,H,W = X.shape
-    classes    = np.unique(y_class)
-    nclasses   = len(classes)
+    allsamples, nchannels, H, W = X.shape
+    classes = np.unique(y_class)
+    nclasses = len(classes)
     
 
     # Sort input by classes

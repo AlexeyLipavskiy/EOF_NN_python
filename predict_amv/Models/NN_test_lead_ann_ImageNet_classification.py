@@ -27,7 +27,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset,Dataset
 import os
 import copy
-import timm
+# import timm
 
 # -------------
 #%% User Edits
@@ -132,14 +132,18 @@ def transfer_model(modelname,num_classes,cnndropout=False,unfreeze_all=False):
     model : PyTorch Model
         Returns loaded Pytorch model
     """
+    """
     if 'resnet' in modelname: # Load ResNet
         model = timm.create_model(modelname,pretrained=True)
         if unfreeze_all is False: # Freeze all layers except the last
             for param in model.parameters():
                 param.requires_grad = False
         model.fc = nn.Linear(model.fc.in_features, num_classes) # Set last layer size
-        
-    elif modelname == 'simplecnn': # Use Simple CNN from previous testing framework
+    """
+
+    # elif modelname == 'simplecnn': # Use Simple CNN from previous testing framework
+    if modelname == 'simplecnn': # Use Simple CNN from previous testing framework
+
         # 2 layer CNN settings
         channels = 3
         nlat = 224
@@ -196,12 +200,14 @@ def transfer_model(modelname,num_classes,cnndropout=False,unfreeze_all=False):
                     nn.Linear(in_features=64,out_features=num_classes)
                     ]
         model = nn.Sequential(*layers) # Set up model
+
     else: # Load Efficientnet from Timmm
-        model = timm.create_model(modelname,pretrained=True)
-        if unfreeze_all is False: # Freeze all layers except the last
-            for param in model.parameters():
-                param.requires_grad = False
-        model.classifier=nn.Linear(model.classifier.in_features,num_classes)
+        pass
+        # model = timm.create_model(modelname,pretrained=True)
+        # if unfreeze_all is False: # Freeze all layers except the last
+            # for param in model.parameters():
+            #     param.requires_grad = False
+        # model.classifier=nn.Linear(model.classifier.in_features,num_classes)
     return model
 
 def train_ResNet(model,loss_fn,optimizer,trainloader,testloader,max_epochs,early_stop=False,verbose=True,
